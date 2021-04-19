@@ -49,12 +49,13 @@
 
       <div class="row justify-center q-ma-md">
         <q-input
+
           v-model="post.location"
           label="Location"
           class="col col-sm-6"
           dense>
           <template v-slot:append>
-            <q-btn round dense flat icon="eva-navigation-2-outline" />
+            <q-btn round dense flat icon="eva-navigation-2-outline" @click="getLocation"/>
           </template>
 
         </q-input>
@@ -157,6 +158,13 @@ export default {
       var blob = new Blob([ab], {type: mimeString});
       return blob;
 
+    },
+    getLocation() {
+      navigator.geolocation.getCurrentPosition(position => {
+        console.log('pos', position)
+      }, err => {
+        console.log('err', err)
+      }, { timeout: 7000})
     }
   },
   mounted() {
