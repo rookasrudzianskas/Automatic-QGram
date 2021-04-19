@@ -3,7 +3,7 @@
     <q-header
       class="bg-white text-grey-10"
       bordered>
-      <q-toolbar>
+      <q-toolbar class="constrain">
         <q-btn
           flat
           round
