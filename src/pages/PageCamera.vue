@@ -1,10 +1,9 @@
 <template>
   <q-page class="constrain-more q-pa-md">
     <div class="camera-frame q-pa-md">
-      <img
-        src="../assets/rokas.png"
-        class="full-width"
-        alt="">
+      <video
+        ref="video"
+      class="full-width" autoplay playsinline/>
     </div>
     <div class="text-center q-pa-md">
       <q-btn
@@ -16,7 +15,7 @@
 
       <div class="row justify-center q-ma-md">
         <q-input
-          v-model="text"
+          v-model="post.caption"
           label="Caption"
           class="col col-sm-6"
           dense/>
@@ -24,7 +23,7 @@
 
       <div class="row justify-center q-ma-md">
         <q-input
-          v-model="text"
+          v-model="post.location"
           label="Location"
           class="col col-sm-6"
           dense>
@@ -44,8 +43,32 @@
 </template>
 
 <script>
+import { uid } from 'quasar'
 export default {
-  name: 'PageCamera'
+  name: 'PageCamera',
+  data() {
+    return {
+      post: {
+        id: uid(),
+        caption: '',
+        location: '',
+        photo: null,
+        date: Date.now(),
+      }
+    }
+  },
+  methods: {
+    initCamera(){
+      navigator.mediaDevices.getUserMedia({
+        video: true
+      }).then(stream => {
+        this.$refs.video.srcObject = stream
+      })
+    }
+  },
+  mounted() {
+    this.initCamera()
+  }
 }
 </script>
 
