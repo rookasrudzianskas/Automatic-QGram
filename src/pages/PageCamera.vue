@@ -167,7 +167,7 @@ export default {
       }, { timeout: 7000})
     },
     getCityAndCountry(position){
-      let apiUrl = `https://geocode.xyz/${position.coords.longitude},${position.coords.longitude}?json=1`
+      let apiUrl = `https://geocode.xyz/${position.coords.latitude},${position.coords.longitude}?json=1`
       this.$axios.get(apiUrl).then(result => {
         this.locationSuccess(result)
       }).catch(err => {
