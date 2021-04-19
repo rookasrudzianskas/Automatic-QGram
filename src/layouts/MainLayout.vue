@@ -1,27 +1,28 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <q-header
+      class="bg-white text-grey-10"
+      bordered>
       <q-toolbar>
-        <q-toolbar-title>
-          Quasar App
+        <q-toolbar-title class="text-grand-hotel text-bold">
+          QGram
         </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
     <q-footer class="bg-white" bordered>
-      <q-tabs class="text-grey-10">
+      <q-tabs
+        class="text-grey-10"
+      active-color="primary"
+      indicator-color="transparent">
         <q-route-tab
-          name="home"
-          icon="mail"
-          label="Home"
+          icon="eva-home-outline"
+
           to="/"
         />
         <q-route-tab
-          name="camera"
-          icon="alarm"
-          label="Camera"
+          icon="eva-camera-outline"
+
           to="/camera"
         />
       </q-tabs>
@@ -43,3 +44,11 @@ export default {
   }
 }
 </script>
+<style lang="sass">
+.q-toolbar__title
+  text-align: center
+  font-size: 30px
+.q-footer
+    .q-tab__icon
+      font-size: 30px
+</style>
