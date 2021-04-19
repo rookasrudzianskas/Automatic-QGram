@@ -10,8 +10,8 @@
       </q-toolbar>
     </q-header>
 
-    <q-footer elevated>
-      <q-tabs>
+    <q-footer class="bg-white" bordered>
+      <q-tabs class="text-grey-10">
         <q-route-tab
           name="home"
           icon="mail"
