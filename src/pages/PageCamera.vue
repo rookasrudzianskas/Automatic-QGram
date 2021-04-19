@@ -51,11 +51,12 @@
         <q-input
 
           v-model="post.location"
+          :loading="locationLoading"
           label="Location"
           class="col col-sm-6"
           dense>
           <template v-slot:append>
-            <q-btn round dense flat icon="eva-navigation-2-outline" @click="getLocation"/>
+            <q-btn v-if="!locationLoading" round dense flat icon="eva-navigation-2-outline" @click="getLocation"/>
           </template>
 
         </q-input>
@@ -86,6 +87,7 @@ export default {
       imageCaptured: false,
       imageUpload: [],
       hasCameraSupport: true,
+      locationLoading: false
     }
   },
   methods: {
@@ -160,10 +162,11 @@ export default {
 
     },
     getLocation() {
+      this.locationLoading = true
       navigator.geolocation.getCurrentPosition(position => {
         this.getCityAndCountry(position)
       }, err => {
-        console.log('err', err)
+        this.locationError()
       }, { timeout: 7000})
     },
     getCityAndCountry(position){
@@ -171,7 +174,7 @@ export default {
       this.$axios.get(apiUrl).then(result => {
         this.locationSuccess(result)
       }).catch(err => {
-        console.log('err', err)
+        this.locationError()
       })
     },
     locationSuccess(result) {
@@ -179,7 +182,16 @@ export default {
       if(result.data.country) {
         this.post.location += `, ${ result.data.country }`
       }
+      this.locationLoading = false
+    },
+    locationError() {
+      this.$q.dialog({
+        title: 'Error',
+        message: 'Could not find your location'
+      })
+      this.locationLoading = false
     }
+
   },
   mounted() {
     this.initCamera()
