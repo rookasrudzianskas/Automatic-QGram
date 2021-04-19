@@ -56,7 +56,7 @@
           class="col col-sm-6"
           dense>
           <template v-slot:append>
-            <q-btn v-if="!locationLoading" round dense flat icon="eva-navigation-2-outline" @click="getLocation"/>
+            <q-btn v-if="!locationLoading && locationSupported" round dense flat icon="eva-navigation-2-outline" @click="getLocation"/>
           </template>
 
         </q-input>
@@ -88,6 +88,15 @@ export default {
       imageUpload: [],
       hasCameraSupport: true,
       locationLoading: false
+    }
+  },
+  computed: {
+    locationSupported() {
+      if('geolocation' in navigator) {
+        return true
+      } else {
+        return false
+      }
     }
   },
   methods: {
@@ -195,6 +204,7 @@ export default {
   },
   mounted() {
     this.initCamera()
+
   },
   beforeDestroy() {
     if (this.hasCameraSupport) {
