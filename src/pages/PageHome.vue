@@ -31,7 +31,7 @@
 
       <q-card-section>
         <div>{{ post.caption}}</div>
-        <div class="text-caption text-grey">{{ post.date }}</div>
+        <div class="text-caption text-grey">{{ post.date | niceDate}}</div>
       </q-card-section>
 
     </q-card>
@@ -40,6 +40,7 @@
 
 <script>
 import image from '../assets/rokas.png'
+import { date } from 'quasar'
 
 export default {
   name: 'PageHome',
@@ -70,6 +71,11 @@ export default {
           imgUrl: image,
         },
       ]
+    }
+  },
+  filters: {
+    niceDate(value) {
+      return date.formatDate(value, 'MMMM D h:mmA')
     }
   }
 }
