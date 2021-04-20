@@ -63,7 +63,7 @@
       </div>
 
       <div class="row justify-center q-mt-lg">
-        <q-btn @click="addPost" unelevated rounded color="primary" label="Post Image" />
+        <q-btn @click="addPost()" unelevated rounded color="primary" label="Post Image" />
       </div>
 
     </div>
