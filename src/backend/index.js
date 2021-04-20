@@ -5,6 +5,9 @@ const express = require('express')
 const admin = require('firebase-admin');
 let inspect = require('util').inspect;
 let Busboy = require('busboy');
+let path = require('path');
+let os = require('os');
+let fs = require('fs');
 
 
 //config - express
@@ -15,10 +18,12 @@ const app = express()
 const serviceAccount = require('./serviceAccountKey.json');
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert(serviceAccount),
+  storageBucket: "qgram-2b8fd.appspot.com",
 });
 
 const db = admin.firestore();
+let bucket = admin.storage().bucket();
 
 
 // endpoint - posts
@@ -47,16 +52,16 @@ app.post('/createPost', (request, response) => {
   var busboy = new Busboy({ headers: request.headers });
 
   let fields = {}
+  let fileData = {}
 
 
   busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
     console.log('File [' + fieldname + ']: filename: ' + filename + ', encoding: ' + encoding + ', mimetype: ' + mimetype);
-    file.on('data', function(data) {
-      console.log('File [' + fieldname + '] got ' + data.length + ' bytes');
-    });
-    file.on('end', function() {
-      console.log('File [' + fieldname + '] Finished');
-    });
+    // /temp/43243.png
+
+    let filepath = path.join(os.tmpdir(), filename)
+    file.pipe(fs.createWriteStream(filepath))
+    fileData = {filepath, mimetype}
   });
 
   busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) {
@@ -69,7 +74,7 @@ app.post('/createPost', (request, response) => {
       id: fields.id,
       caption: fields.caption,
       location: fields.location,
-      date: fields.date,
+      date: parseInt(fields.date),
       imageUrl: 'https://firebasestorage.googleapis.com/v0/b/qgram-2b8fd.appspot.com/o/F4ckE18.jpeg?alt=media&token=5c3d3a08-5dbd-4b48-b0f4-a3090e2e393d'
     });
     response.send("Done parcing form!")
