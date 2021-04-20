@@ -36,6 +36,15 @@ const db = admin.firestore();
 
   })
 
+
+// endpoint - Create Posts
+
+app.post('/createPost', (request, response) => {
+  response.set('Access-Control-Allow-Origin', '*')
+  response.send(request.headers)
+})
+
+
 // listen for changes
 
 app.listen(process.env.PORT || 3000)
