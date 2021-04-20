@@ -2,6 +2,7 @@
   <q-page class="constrain q-pa-md">
     <div class="row q-col-gutter-lg">
       <div class="col-12 col-sm-8">
+        <template v-if="!loadingPosts">
         <q-card
           v-for="post in posts"
           :key="post.id"
@@ -37,6 +38,32 @@
           </q-card-section>
 
         </q-card>
+        </template>
+        <template v-else>
+          <q-card flat bordered>
+            <q-item>
+              <q-item-section avatar>
+                <q-skeleton type="QAvatar" animation="fade" size="40px" />
+              </q-item-section>
+
+              <q-item-section>
+                <q-item-label>
+                  <q-skeleton type="text" animation="fade" />
+                </q-item-label>
+                <q-item-label caption>
+                  <q-skeleton type="text" animation="fade" />
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+
+            <q-skeleton height="200px" square animation="fade" />
+
+            <q-card-section>
+              <q-skeleton type="text" class="text-subtitle2" animation="fade" />
+              <q-skeleton type="text" width="50%" class="text-subtitle2" animation="fade" />
+            </q-card-section>
+          </q-card>
+        </template>
       </div>
       <div class="col-4 large-screen-only">
         <q-item class="fixed">
@@ -71,15 +98,22 @@ export default {
   name: 'PageHome',
   data() {
     return {
-      posts: []
+      posts: [],
+      loadingPosts: false,
     }
   },
   methods: {
     getPosts() {
+      this.loadingPosts = true
       this.$axios.get('http://localhost:3000/posts').then(response => {
         this.posts = response.data
+        this.loadingPosts = false
       }).catch(err => {
-        console.log("err", err)
+        this.$q.dialog({
+          title: 'Error',
+          message: 'Could not download posts'
+        });
+        this.loadingPosts = false
       })
     }
   },
