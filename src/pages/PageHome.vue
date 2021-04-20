@@ -71,37 +71,25 @@ export default {
   name: 'PageHome',
   data() {
     return {
-      posts: [
-        {
-          id: 1,
-          caption: 'Apple Swift Challenge 2021',
-          date: 1618828566214,
-          location: 'Los Angeles, United States',
-          imgUrl: image,
-        },
-
-        {
-          id: 2,
-          caption: 'Apple Swift Challenge 2021',
-          date: 1618828566214,
-          location: 'Los Angeles, United States',
-          imgUrl: image,
-        },
-
-        {
-          id: 3,
-          caption: 'Apple Swift Challenge 2021',
-          date: 1618828566214,
-          location: 'Los Angeles, United States',
-          imgUrl: image,
-        },
-      ]
+      posts: []
+    }
+  },
+  methods: {
+    getPosts() {
+      this.$axios.get('http://localhost:3000/posts').then(response => {
+        this.posts = response.data
+      }).catch(err => {
+        console.log("err", err)
+      })
     }
   },
   filters: {
     niceDate(value) {
       return date.formatDate(value, 'MMMM D h:mmA')
     }
+  },
+  created() {
+    this.getPosts()
   }
 }
 </script>
