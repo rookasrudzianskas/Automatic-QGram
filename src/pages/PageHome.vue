@@ -30,7 +30,7 @@
 
           <q-separator />
 
-          <q-img :src="post.imgUrl"/>
+          <q-img :src="post.imageUrl"/>
 
           <q-card-section>
             <div>{{ post.caption}}</div>
