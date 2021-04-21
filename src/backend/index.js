@@ -8,6 +8,7 @@ let Busboy = require('busboy');
 let path = require('path');
 let os = require('os');
 let fs = require('fs');
+let UUID = require('uuid-v4');
 
 
 //config - express
@@ -48,7 +49,7 @@ let bucket = admin.storage().bucket();
 app.post('/createPost', (request, response) => {
   response.set('Access-Control-Allow-Origin', '*')
 
-
+  let uuid = UUID();
   var busboy = new Busboy({ headers: request.headers });
 
   let fields = {}
@@ -78,21 +79,29 @@ app.post('/createPost', (request, response) => {
         metadata: {
           metadata: {
             contentType: fileData.mimetype,
-            firebaseStorageDownloadTokens:
+            firebaseStorageDownloadTokens: uuid
           }
+        }
+      },
+      (err, uploadedFile) => {
+        if(!err) {
+          createDocument(uploadedFile)
         }
       }
     )
 
-
-    db.collection('posts').doc(fields.id).set({
-      id: fields.id,
-      caption: fields.caption,
-      location: fields.location,
-      date: parseInt(fields.date),
-      imageUrl: 'https://firebasestorage.googleapis.com/v0/b/qgram-2b8fd.appspot.com/o/F4ckE18.jpeg?alt=media&token=5c3d3a08-5dbd-4b48-b0f4-a3090e2e393d'
-    });
-    response.send("Done parcing form!")
+    function createDocument(uploadedFile) {
+      db.collection('posts').doc(fields.id).set({
+        id: fields.id,
+        caption: fields.caption,
+        location: fields.location,
+        date: parseInt(fields.date),
+        imageUrl:
+          `https://firebasestorage.googleapis.com/v0/b/${ bucket.name }/o/${ uploadedFile.name }?alt=media&token=${ uuid }`
+      }).then(() => {
+        response.send('Post added:' + fields.id)
+      })
+    }
   });
   request.pipe(busboy);
 })
