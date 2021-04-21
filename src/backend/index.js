@@ -70,6 +70,21 @@ app.post('/createPost', (request, response) => {
   });
 
   busboy.on('finish', function() {
+
+    bucket.upload(
+      fileData.filepath,
+      {
+        uploadType: 'media',
+        metadata: {
+          metadata: {
+            contentType: fileData.mimetype,
+            firebaseStorageDownloadTokens:
+          }
+        }
+      }
+    )
+
+
     db.collection('posts').doc(fields.id).set({
       id: fields.id,
       caption: fields.caption,
